@@ -1,0 +1,82 @@
+{
+    "allow_copy": 0,
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "field:governorate_name",
+    "creation": "2024-01-01 00:00:00.000000",
+    "description": "Governorate for shipping rules",
+    "doctype": "DocType",
+    "editable_grid": 0,
+    "fields": [
+        {
+            "fieldname": "governorate_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Governorate Name",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "country",
+            "fieldtype": "Link",
+            "label": "Country",
+            "options": "Country"
+        },
+        {
+            "default": "1",
+            "fieldname": "enabled",
+            "fieldtype": "Check",
+            "label": "Enabled"
+        }
+    ],
+    "hide_heading": 0,
+    "hide_toolbar": 0,
+    "idx": 0,
+    "image_view": 0,
+    "in_create": 0,
+    "is_submittable": 0,
+    "issingle": 0,
+    "istable": 0,
+    "modified": "2024-01-01 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Custom Shipping Rule",
+    "name": "Governorate",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "import": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "set_user_permissions": 1,
+            "share": 1,
+            "write": 1
+        },
+        {
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Sales Manager"
+        },
+        {
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Sales User"
+        }
+    ],
+    "quick_entry": 0,
+    "read_only": 0,
+    "read_only_onload": 0,
+    "show_name_in_global_search": 0,
+    "sort_order": "ASC"
+}
