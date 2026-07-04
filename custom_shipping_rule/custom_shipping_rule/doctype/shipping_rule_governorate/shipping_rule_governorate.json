@@ -16,6 +16,14 @@
             "reqd": 1
         },
         {
+            "fieldname": "district",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "District",
+            "options": "District",
+            "reqd": 0
+        },
+        {
             "fieldname": "from_weight",
             "fieldtype": "Float",
             "in_list_view": 1,
@@ -35,6 +43,21 @@
             "in_list_view": 1,
             "label": "Shipping Amount",
             "reqd": 1
+        },
+        {
+            "fieldname": "added_value",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Added Value",
+            "reqd": 0
+        },
+        {
+            "fieldname": "total_shipping_amount",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Total Shipping Amount",
+            "read_only": 1,
+            "reqd": 0
         }
     ],
     "hide_heading": 0,

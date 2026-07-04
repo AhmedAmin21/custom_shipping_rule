@@ -26,10 +26,18 @@ def setup_custom_fields():
         })
 
         create_custom_field(dt, {
+            "fieldname": "shipping_district",
+            "label": "Shipping District",
+            "fieldtype": "Link",
+            "options": "District",
+            "insert_after": "shipping_destination"
+        })
+
+        create_custom_field(dt, {
             "fieldname": "custom_manual_shipping_amount",
             "label": "Manual Shipping Amount",
             "fieldtype": "Currency",
-            "insert_after": "shipping_destination"
+            "insert_after": "shipping_district"
         })
 
 def setup_property_setters():

@@ -4,6 +4,17 @@ frappe.ui.form.on('Sales Order', {
     },
 
     shipping_destination: function(frm) {
+        if (frm.doc.shipping_destination && frm.doc.shipping_district) {
+            frappe.db.get_value('District', frm.doc.shipping_district, 'governorate')
+                .then(r => {
+                    if (r.message && r.message.governorate !== frm.doc.shipping_destination) {
+                        frm.set_value('shipping_district', '');
+                    }
+                });
+        } else if (!frm.doc.shipping_destination) {
+            frm.set_value('shipping_district', '');
+        }
+
         if (frm.doc.shipping_rule && frm.doc.shipping_destination) {
             frm.trigger('shipping_rule');
         }
@@ -11,27 +22,47 @@ frappe.ui.form.on('Sales Order', {
 
     refresh: function(frm) {
         toggle_shipping_destination(frm);
+        setup_shipping_district_query(frm);
     }
 });
+
+function setup_shipping_district_query(frm) {
+    frm.set_query('shipping_district', function() {
+        if (!frm.doc.shipping_destination) {
+            return { filters: { name: ['in', []] } };
+        }
+        return {
+            filters: {
+                governorate: frm.doc.shipping_destination
+            }
+        };
+    });
+}
 
 function toggle_shipping_destination(frm) {
     if (!frm.doc.shipping_rule) {
         frm.set_df_property('shipping_destination', 'hidden', 1);
         frm.set_df_property('shipping_destination', 'reqd', 0);
+        frm.set_df_property('shipping_district', 'hidden', 1);
+        frm.set_df_property('shipping_district', 'reqd', 0);
         frm.set_value('shipping_destination', '');
+        frm.set_value('shipping_district', '');
         frm.set_value('custom_manual_shipping_amount', 0);
         return;
     }
-    
+
     frappe.db.get_value('Shipping Rule', frm.doc.shipping_rule, 'calculate_based_on')
         .then(r => {
             const is_governorate = r.message && r.message.calculate_based_on === 'Governorate';
-            
+
             frm.set_df_property('shipping_destination', 'hidden', !is_governorate);
             frm.set_df_property('shipping_destination', 'reqd', is_governorate);
-            
+            frm.set_df_property('shipping_district', 'hidden', !is_governorate);
+            frm.set_df_property('shipping_district', 'reqd', 0);
+
             if (!is_governorate) {
                 frm.set_value('shipping_destination', '');
+                frm.set_value('shipping_district', '');
                 frm.set_value('custom_manual_shipping_amount', 0);
             } else {
                 check_and_show_weight_dialog(frm);
@@ -41,11 +72,11 @@ function toggle_shipping_destination(frm) {
 
 function check_and_show_weight_dialog(frm) {
     const items_without_weight = frm.doc.items.filter(item => !flt(item.total_weight));
-    
+
     if (items_without_weight.length === 0) return;
-    
+
     const item_list = items_without_weight.map(i => `<li>${i.item_code}</li>`).join("");
-    
+
     const d = new frappe.ui.Dialog({
         title: __("Weight Data Missing"),
         fields: [
@@ -62,12 +93,12 @@ function check_and_show_weight_dialog(frm) {
             });
         }
     });
-    
+
     d.add_custom_button(__("Continue Without Weight"), () => {
         d.hide();
         frappe.show_alert(__("Proceeding with available weight data."));
     });
-    
+
     d.add_custom_button(__("Enter Manual Amount"), () => {
         d.hide();
         frappe.prompt(
@@ -84,6 +115,6 @@ function check_and_show_weight_dialog(frm) {
             __("Manual Shipping Amount")
         );
     });
-    
+
     d.show();
 }

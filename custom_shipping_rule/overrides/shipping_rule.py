@@ -27,12 +27,18 @@ class CustomShippingRule(ShippingRule):
                 
                 if d1.governorate != d2.governorate:
                     continue
+
+                if (d1.district or "") != (d2.district or ""):
+                    continue
                 
                 # Check overlap
                 if flt(d1.from_weight) <= flt(d2.to_weight) and flt(d2.from_weight) <= flt(d1.to_weight):
+                    location = d1.governorate
+                    if d1.district:
+                        location = f"{location} / {d1.district}"
                     frappe.throw(
-                        _("Row {0} and Row {1}: Overlapping weight ranges for governorate {2}").format(
-                            d1.idx, d2.idx, d1.governorate
+                        _("Row {0} and Row {1}: Overlapping weight ranges for {2}").format(
+                            d1.idx, d2.idx, location
                         )
                     )
     
@@ -54,7 +60,8 @@ class CustomShippingRule(ShippingRule):
                 shipping_amount = get_governorate_shipping_amount(
                     self.name,
                     doc.shipping_destination,
-                    total_weight
+                    total_weight,
+                    doc.get("shipping_district"),
                 )
             
             # Currency conversion
