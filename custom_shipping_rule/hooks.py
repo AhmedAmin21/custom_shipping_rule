@@ -141,13 +141,14 @@ override_doctype_class = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Sales Order": {
+		"validate": "custom_shipping_rule.utils.validate_shipping.validate_governorate_shipping"
+	},
+	"Sales Invoice": {
+		"validate": "custom_shipping_rule.utils.validate_shipping.validate_governorate_shipping"
+	},
+}
 
 # Scheduled Tasks
 # ---------------

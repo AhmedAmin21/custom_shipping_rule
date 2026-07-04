@@ -8,16 +8,27 @@ frappe.ui.form.on('Sales Invoice', {
             frappe.db.get_value('District', frm.doc.shipping_district, 'governorate')
                 .then(r => {
                     if (r.message && r.message.governorate !== frm.doc.shipping_destination) {
-                        frm.set_value('shipping_district', '');
+                        frappe.flags.ignore_shipping_district_trigger = true;
+                        frm.set_value('shipping_district', '').finally(() => {
+                            frappe.flags.ignore_shipping_district_trigger = false;
+                        });
                     }
                 });
         } else if (!frm.doc.shipping_destination) {
-            frm.set_value('shipping_district', '');
+            frappe.flags.ignore_shipping_district_trigger = true;
+            frm.set_value('shipping_district', '').finally(() => {
+                frappe.flags.ignore_shipping_district_trigger = false;
+            });
         }
 
-        if (frm.doc.shipping_rule && frm.doc.shipping_destination) {
-            frm.trigger('shipping_rule');
+        trigger_governorate_shipping(frm);
+    },
+
+    shipping_district: function(frm) {
+        if (frappe.flags.ignore_shipping_district_trigger) {
+            return;
         }
+        trigger_governorate_shipping(frm);
     },
 
     refresh: function(frm) {
@@ -25,6 +36,15 @@ frappe.ui.form.on('Sales Invoice', {
         setup_shipping_district_query(frm);
     }
 });
+
+function trigger_governorate_shipping(frm) {
+    clearTimeout(frm._governorate_shipping_timer);
+    frm._governorate_shipping_timer = setTimeout(() => {
+        if (frm.doc.shipping_rule && frm.doc.shipping_destination) {
+            frm.trigger('shipping_rule');
+        }
+    }, 400);
+}
 
 function setup_shipping_district_query(frm) {
     frm.set_query('shipping_district', function() {

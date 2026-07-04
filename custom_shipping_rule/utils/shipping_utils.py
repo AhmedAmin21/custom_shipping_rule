@@ -3,7 +3,9 @@ from frappe import _
 from frappe.utils import flt
 
 
-def get_governorate_shipping_amount(shipping_rule, governorate, total_weight, district=None):
+def get_governorate_shipping_amount(
+	shipping_rule, governorate, total_weight, district=None, show_message=False
+):
 	if district:
 		matched = _get_matching_condition(shipping_rule, governorate, total_weight, district)
 		if matched:
@@ -13,14 +15,15 @@ def get_governorate_shipping_amount(shipping_rule, governorate, total_weight, di
 	if matched:
 		return matched
 
-	location_label = governorate
-	if district:
-		location_label = f"{governorate} / {district}"
+	if show_message:
+		location_label = governorate
+		if district:
+			location_label = f"{governorate} / {district}"
 
-	frappe.msgprint(
-		_("No shipping rate found for {0} at weight {1}kg.").format(location_label, total_weight),
-		alert=True,
-	)
+		frappe.msgprint(
+			_("No shipping rate found for {0} at weight {1}kg.").format(location_label, total_weight),
+			alert=True,
+		)
 	return 0
 
 

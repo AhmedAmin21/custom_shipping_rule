@@ -50,18 +50,15 @@ class CustomShippingRule(ShippingRule):
                 shipping_amount = flt(manual_amount)
             else:
                 if not doc.shipping_destination:
-                    frappe.msgprint(
-                        _("Please select a Shipping Destination to apply the Governorate-based shipping rule."),
-                        alert=True
-                    )
                     return
-                
+
                 total_weight = self._get_weight_in_kg(doc)
                 shipping_amount = get_governorate_shipping_amount(
                     self.name,
                     doc.shipping_destination,
                     total_weight,
                     doc.get("shipping_district"),
+                    show_message=False,
                 )
             
             # Currency conversion
