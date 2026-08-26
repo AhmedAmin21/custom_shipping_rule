@@ -46,7 +46,8 @@ app_license = "mit"
 doctype_js = {
 	"Shipping Rule": "public/js/shipping_rule.js",
 	"Sales Invoice": "public/js/sales_invoice.js",
-	"Sales Order": "public/js/sales_order.js"
+	"Sales Order": "public/js/sales_order.js",
+	"Quotation": "public/js/quotation.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -146,6 +147,9 @@ doc_events = {
 		"validate": "custom_shipping_rule.utils.validate_shipping.validate_governorate_shipping"
 	},
 	"Sales Invoice": {
+		"validate": "custom_shipping_rule.utils.validate_shipping.validate_governorate_shipping"
+	},
+	"Quotation": {
 		"validate": "custom_shipping_rule.utils.validate_shipping.validate_governorate_shipping"
 	},
 }

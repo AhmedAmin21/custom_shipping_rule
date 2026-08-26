@@ -16,7 +16,7 @@ def setup_custom_fields():
         "insert_after": "conditions"
     })
     
-    for dt in ("Sales Invoice", "Sales Order"):
+    for dt in ("Sales Invoice", "Sales Order", "Quotation"):
         create_custom_field(dt, {
             "fieldname": "shipping_destination",
             "label": "Shipping Destination",
